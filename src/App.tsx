@@ -1,10 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from './infrastructure/providers/AuthProvider';
 import { ProductProvider } from './infrastructure/providers/ProductProvider';
+import { CartProvider } from './infrastructure/providers/CartProvider';
 import { LoginPage } from './adapters/inbound/ui/pages/LoginPage';
 import { SignUpPage } from './adapters/inbound/ui/pages/SignUpPage';
 import { HomePage } from './adapters/inbound/ui/pages/HomePage';
 import { ProductDetailPage } from './adapters/inbound/ui/pages/ProductDetailPage';
+import { CartPage } from './adapters/inbound/ui/pages/CartPage';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -28,26 +31,43 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <ProductProvider>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <HomePage />
-                </ProtectedRoute>
-              }
+          <CartProvider>
+            <Toaster
+              position="bottom-center"
+              richColors
+              closeButton
+              expand={false}
+              duration={3000}
             />
-            <Route
-              path="/products/:id"
-              element={
-                <ProtectedRoute>
-                  <ProductDetailPage />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <HomePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/products/:id"
+                element={
+                  <ProtectedRoute>
+                    <ProductDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute>
+                    <CartPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </CartProvider>
         </ProductProvider>
       </AuthProvider>
     </BrowserRouter>

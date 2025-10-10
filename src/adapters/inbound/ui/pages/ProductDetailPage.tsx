@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { type Product, CATEGORY_LABELS } from '@/domain/entities/Product';
-import { useProducts } from '@/infrastructure/providers/ProductProvider';
+import { toast } from 'sonner';
+import { Header } from '../layout/Header';
+import { type Product, CATEGORY_LABELS } from '@/domain/entities/Product.ts';
+import { useCart } from '@/infrastructure/providers/CartProvider.tsx';
+import { TokenStorageAdapter } from '@/adapters/outbound/api/TokenStorageAdapter.ts';
+import { ProductApiAdapter } from '@/adapters/outbound/api/ProductApiAdapter.ts';
+import { ProductUseCases } from '@/domain/usecases/ProductUseCases.ts';
 import {
   ShoppingCart,
   Package,
@@ -9,25 +14,19 @@ import {
   Minus,
   Plus,
   Loader2,
-  Check,
   Tag
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Header } from "@/adapters/inbound/ui/layout/Header.tsx";
-import { TokenStorageAdapter } from '@/adapters/outbound/api/TokenStorageAdapter.ts';
-import { ProductApiAdapter } from '@/adapters/outbound/api/ProductApiAdapter.ts';
-import { ProductUseCases } from '@/domain/usecases/ProductUseCases.ts';
-import ProductNotFound from "@/adapters/inbound/ui/components/products/ProductNotFound.tsx";
 
 export const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { error } = useProducts();
+  const { addToCart, error: cartError } = useCart();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [addedToCart, setAddedToCart] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false); // ← Ajouter
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -35,16 +34,16 @@ export const ProductDetailPage: React.FC = () => {
 
       try {
         setIsLoading(true);
-
-        // ⬇️ Créer une instance temporaire pour récupérer le produit
         const tokenStorage = new TokenStorageAdapter();
         const productApiAdapter = new ProductApiAdapter(() => tokenStorage.getAccessToken());
         const productUseCases = new ProductUseCases(productApiAdapter);
 
         const fetchedProduct = await productUseCases.getProductById(id);
         setProduct(fetchedProduct);
-      } catch (err) {
-        console.error('Erreur lors du chargement du produit:', err);
+      } catch {
+        toast.error('Erreur', {
+          description: 'Impossible de charger le produit',
+        });
       } finally {
         setIsLoading(false);
       }
@@ -62,14 +61,30 @@ export const ProductDetailPage: React.FC = () => {
     }
   };
 
-  const handleAddToCart = () => {
-    // TODO: Implémenter l'ajout au panier
-    console.log(`Ajouter ${quantity}x ${product?.name} au panier`);
-    setAddedToCart(true);
+  const handleAddToCart = async () => {
+    if (!product) return;
 
-    setTimeout(() => {
-      setAddedToCart(false);
-    }, 3000);
+    try {
+      setIsAddingToCart(true);
+      await addToCart({ productId: product.id, quantity });
+
+      // ⬇️ Toast de succès avec action
+      toast.success(`${quantity}x ${product.name} ajouté${quantity > 1 ? 's' : ''} au panier`, {
+        description: `Total: ${(product.price * quantity).toFixed(2)} €`,
+        action: {
+          label: 'Voir le panier',
+          onClick: () => navigate('/cart'),
+        },
+      });
+
+      setQuantity(1);
+    } catch {
+      toast.error('Erreur', {
+        description: 'Impossible d\'ajouter le produit au panier',
+      });
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   if (isLoading) {
@@ -87,7 +102,23 @@ export const ProductDetailPage: React.FC = () => {
   }
 
   if (!product) {
-    return <ProductNotFound />
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Alert variant="destructive">
+            <AlertDescription>Produit introuvable</AlertDescription>
+          </Alert>
+          <button
+            onClick={() => navigate('/')}
+            className="mt-4 text-blue-600 hover:text-blue-700 flex items-center"
+          >
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            Retour aux produits
+          </button>
+        </div>
+      </div>
+    );
   }
 
   const isOutOfStock = product.stock === 0;
@@ -100,30 +131,18 @@ export const ProductDetailPage: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
           onClick={() => navigate('/')}
-          className="text-gray-600 hover:text-gray-900 flex items-center mb-6 transition-colors"
+          className="cursor-pointer text-gray-600 hover:text-gray-900 flex items-center mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Retour aux produits
         </button>
 
-        {/* Error Alert */}
-        {error && (
+        {cartError && (
           <Alert variant="destructive" className="mb-6">
-            <AlertDescription>{error}</AlertDescription>
+            <AlertDescription>{cartError}</AlertDescription>
           </Alert>
         )}
 
-        {/* Success Alert */}
-        {addedToCart && (
-          <Alert className="mb-6 bg-green-50 border-green-200">
-            <Check className="w-4 h-4 text-green-600" />
-            <AlertDescription className="text-green-800 ml-2">
-              Produit ajouté au panier avec succès !
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Product Detail */}
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-8">
             {/* Image Section */}
@@ -137,15 +156,9 @@ export const ProductDetailPage: React.FC = () => {
                     e.currentTarget.src = 'https://via.placeholder.com/600x600?text=No+Image';
                   }}
                 />
-                {isOutOfStock && (
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <span className="text-white font-bold text-2xl">Rupture de stock</span>
-                  </div>
-                )}
               </div>
             </div>
 
-            {/* Info Section */}
             <div className="flex flex-col">
               {/* Category Badge */}
               <div className="flex items-center gap-2 mb-4">
@@ -155,22 +168,18 @@ export const ProductDetailPage: React.FC = () => {
                 </span>
               </div>
 
-              {/* Brand */}
               <p className="text-sm text-gray-500 mb-2">{product.brand}</p>
 
-              {/* Title */}
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 {product.name}
               </h1>
 
-              {/* Price */}
               <div className="mb-6">
                 <span className="text-4xl font-bold text-gray-900">
                   {product.price.toFixed(2)} €
                 </span>
               </div>
 
-              {/* Stock */}
               <div className="flex items-center mb-6">
                 <Package className="w-5 h-5 text-gray-400 mr-2" />
                 <span className={`text-sm font-medium ${
@@ -186,7 +195,6 @@ export const ProductDetailPage: React.FC = () => {
                 </span>
               </div>
 
-              {/* Description */}
               <div className="mb-8">
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">Description</h2>
                 <p className="text-gray-600 leading-relaxed">
@@ -194,7 +202,6 @@ export const ProductDetailPage: React.FC = () => {
                 </p>
               </div>
 
-              {/* Quantity Selector */}
               {!isOutOfStock && (
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -204,7 +211,7 @@ export const ProductDetailPage: React.FC = () => {
                     <button
                       onClick={() => handleQuantityChange(-1)}
                       disabled={quantity <= 1}
-                      className="w-10 h-10 rounded-lg border-2 border-gray-300 flex items-center justify-center hover:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="cursor-pointer w-10 h-10 rounded-lg border-2 border-gray-300 flex items-center justify-center hover:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       <Minus className="w-4 h-4" />
                     </button>
@@ -216,7 +223,7 @@ export const ProductDetailPage: React.FC = () => {
                     <button
                       onClick={() => handleQuantityChange(1)}
                       disabled={quantity >= product.stock}
-                      className="w-10 h-10 rounded-lg border-2 border-gray-300 flex items-center justify-center hover:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="cursor-pointer w-10 h-10 rounded-lg border-2 border-gray-300 flex items-center justify-center hover:border-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       <Plus className="w-4 h-4" />
                     </button>
@@ -230,24 +237,24 @@ export const ProductDetailPage: React.FC = () => {
 
               <button
                 onClick={handleAddToCart}
-                disabled={isOutOfStock || addedToCart}
+                disabled={isOutOfStock || isAddingToCart}
                 className={`
-                  w-full py-4 px-6 rounded-lg font-semibold text-lg
+                  cursor-pointer w-full py-4 px-6 rounded-lg font-semibold text-lg
                   flex items-center justify-center space-x-2
                   transition-all duration-200
                   ${
                   isOutOfStock
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : addedToCart
-                      ? 'bg-green-600 text-white'
+                    : isAddingToCart
+                      ? 'bg-blue-500 text-white cursor-wait'
                       : 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95'
                 }
                 `}
               >
-                {addedToCart ? (
+                {isAddingToCart ? (
                   <>
-                    <Check className="w-5 h-5" />
-                    <span>Ajouté au panier</span>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span>Ajout en cours...</span>
                   </>
                 ) : (
                   <>
@@ -257,7 +264,6 @@ export const ProductDetailPage: React.FC = () => {
                 )}
               </button>
 
-              {/* Additional Info */}
               <div className="mt-8 pt-8 border-t border-gray-200">
                 <div className="space-y-3 text-sm text-gray-600">
                   <div className="flex items-center">

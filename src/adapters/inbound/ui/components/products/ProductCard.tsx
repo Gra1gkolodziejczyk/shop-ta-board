@@ -26,7 +26,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }
       onClick={handleCardClick}
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group"
     >
-      {/* Image */}
       <div className="relative h-48 bg-gray-200 overflow-hidden">
         <img
           src={product.imageUrl}
@@ -36,17 +35,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }
             e.currentTarget.src = 'https://via.placeholder.com/400x300?text=No+Image';
           }}
         />
-        {isOutOfStock && (
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <span className="text-white font-bold text-lg">Rupture de stock</span>
-          </div>
-        )}
         <div className="absolute top-2 right-2 bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium">
           {CATEGORY_LABELS[product.category]}
         </div>
       </div>
 
-      {/* Content */}
       <div className="p-4">
         <p className="text-xs text-gray-500 mb-1">{product.brand}</p>
         <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
@@ -56,25 +49,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }
           {product.description}
         </p>
 
-        {/* Price */}
         <div className="mb-2">
           <span className="text-2xl font-bold text-gray-900">
             {product.price.toFixed(2)} €
           </span>
         </div>
 
-        {/* Stock */}
         <div className="flex items-center mb-4">
           <Package className="w-4 h-4 text-gray-400 mr-1.5" />
           <span className="text-sm text-gray-500">{product.stock} en stock</span>
         </div>
 
-        {/* Add to Cart Button */}
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock}
           className={`
-            w-full py-2.5 px-4 rounded-lg font-medium transition-all flex items-center justify-center
+           cursor-pointer w-full py-2.5 px-4 rounded-lg font-medium transition-all flex items-center justify-center
             ${
             isOutOfStock
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'

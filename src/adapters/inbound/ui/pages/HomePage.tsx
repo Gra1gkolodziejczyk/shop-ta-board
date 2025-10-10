@@ -5,6 +5,8 @@ import { ProductList } from '../components/products/ProductList';
 import { useProducts } from '@/infrastructure/providers/ProductProvider.tsx';
 import type { Product } from '@/domain/entities/Product.ts';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useCart } from "@/infrastructure/providers/CartProvider.tsx";
+import {toast} from "sonner";
 
 export const HomePage: React.FC = () => {
   const {
@@ -16,29 +18,34 @@ export const HomePage: React.FC = () => {
     setSelectedCategory,
     clearError,
   } = useProducts();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
-  const handleAddToCart = (product: Product) => {
-    alert(`${product.name} ajouté au panier ! (À implémenter)`);
+  const handleAddToCart = async (product: Product) => {
+    try {
+      await addToCart({ productId: product.id, quantity: 1 });
+
+      toast.success('Produit ajouté au panier', {
+        description: `${product.name} a été ajouté à votre panier`,
+        action: {
+          label: 'Voir le panier',
+          onClick: () => window.location.href = '/cart',
+        },
+      });
+    } catch {
+      toast.error('Erreur', {
+        description: 'Impossible d\'ajouter le produit au panier',
+      });
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            🛹 Bienvenue sur Shop Ta Board
-          </h1>
-          <p className="text-gray-600 text-lg">
-            Découvrez notre sélection de skateboards et accessoires
-          </p>
-        </div>
-
         {error && (
           <Alert variant="destructive" className="mb-6">
             <AlertDescription className="flex justify-between items-center">

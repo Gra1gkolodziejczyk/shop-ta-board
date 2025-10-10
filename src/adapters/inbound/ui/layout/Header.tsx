@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { useCart } from '@/infrastructure/providers/CartProvider.tsx'; // ← Ajouter
 import { Avatar } from '../common/Avatar';
 import { LogOut, User, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Header: React.FC = () => {
   const { user, signOut } = useAuth();
+  const { cart } = useCart(); // ← Ajouter
   const [showDropdown, setShowDropdown] = useState(false);
 
   if (!user) return null;
+
+  const cartItemsCount = cart?.totalItems || 0; // ← Nombre d'articles
 
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
@@ -28,13 +32,23 @@ export const Header: React.FC = () => {
             >
               Produits
             </Link>
+
+            {/* ⬇️ Panier avec badge */}
             <Link
               to="/cart"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors flex items-center"
+              className="relative text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors flex items-center group"
             >
-              <ShoppingCart className="w-4 h-4 mr-1" />
-              Panier
+              <ShoppingCart className="w-4 h-4 mr-1 group-hover:scale-110 transition-transform" />
+              <span>Panier</span>
+
+              {/* Badge avec le nombre d'articles */}
+              {cartItemsCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-in zoom-in duration-200">
+                  {cartItemsCount > 99 ? '99+' : cartItemsCount}
+                </span>
+              )}
             </Link>
+
             <Link
               to="/orders"
               className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"

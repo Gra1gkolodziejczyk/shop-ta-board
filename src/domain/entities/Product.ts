@@ -1,27 +1,31 @@
-export class Product {
-  constructor(
-    public readonly id: string,
-    public readonly name: string,
-    public readonly price: number,
-    public readonly description: string,
-    public readonly category: string,
-    public readonly brand: string,
-    public readonly imageUrl: string,
-    public readonly stock: number
-  ) {}
-
-  isAvailable(): boolean {
-    return this.stock > 0;
-  }
-
-  isLowStock(): boolean {
-    return this.stock > 0 && this.stock <= 5;
-  }
-
-  formatPrice(): string {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(this.price);
-  }
+export enum ProductCategory {
+  WHEEL = 'wheel',
+  BOARD = 'board',
+  SCREW = 'screw',
+  TRUCK = 'truck',
+  GRIP = 'grip',
+  BACKPACK = 'backpack',
+  CLOTHES = 'clothes',
 }
+
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  category: ProductCategory;
+  brand: string;
+  price: number;
+  imageUrl: string;
+  stock: number;
+}
+
+// Helper pour les labels en français
+export const CATEGORY_LABELS: Record<ProductCategory, string> = {
+  [ProductCategory.WHEEL]: 'Roues',
+  [ProductCategory.BOARD]: 'Planches',
+  [ProductCategory.SCREW]: 'Visserie',
+  [ProductCategory.TRUCK]: 'Trucks',
+  [ProductCategory.GRIP]: 'Grip Tape',
+  [ProductCategory.BACKPACK]: 'Sacs',
+  [ProductCategory.CLOTHES]: 'Vêtements',
+};

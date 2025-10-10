@@ -83,13 +83,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setError(null);
       setIsLoading(true);
       const tokens = await authUseCases.signIn(data);
-
-      // ⬇️ AJOUTER CE LOG
-      console.log('🔑 Tokens reçus dans AuthProvider:', tokens);
-      console.log('🔑 Type de tokens:', typeof tokens);
-      console.log('🔑 Keys de tokens:', Object.keys(tokens));
-      console.log('🔑 access_token:', tokens.access_token);
-
       tokenStorage.saveTokens(tokens);
       const currentUser = await authUseCases.getCurrentUser(tokens.access_token);
       setUser(currentUser);

@@ -11,12 +11,6 @@ export class HttpClient {
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
 
-    console.log('📡 HTTP Request:', {
-      url,
-      method: options?.method || 'GET',
-      headers: options?.headers,
-    });
-
     try {
       const response = await fetch(url, {
         ...options,
@@ -26,17 +20,10 @@ export class HttpClient {
         },
       });
 
-      console.log('📥 HTTP Response:', {
-        status: response.status,
-        ok: response.ok,
-      });
-
-      // Gérer les réponses vides (204 No Content, etc.)
       if (response.status === 204 || response.headers.get('content-length') === '0') {
         return {} as T;
       }
 
-      // Essayer de parser le JSON pour avoir un message d'erreur plus précis
       const data = await response.json();
 
       if (!response.ok) {

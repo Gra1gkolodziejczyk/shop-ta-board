@@ -8,7 +8,6 @@ export class AuthApiAdapter implements AuthPort {
   private httpClient: HttpClient;
 
   constructor() {
-    console.log('🔧 AuthApiAdapter - BASE_URL:', API_CONFIG.BASE_URL);
     this.httpClient = new HttpClient(API_CONFIG.BASE_URL);
   }
 
@@ -25,15 +24,12 @@ export class AuthApiAdapter implements AuthPort {
 
   async signIn(data: SignInData): Promise<Tokens> {
     try {
-      console.log('🔑 signIn - Endpoint:', API_CONFIG.ENDPOINTS.AUTH.SIGN_IN);
       const tokens = await this.httpClient.post<Tokens>(
         API_CONFIG.ENDPOINTS.AUTH.SIGN_IN,
         data
       );
-      console.log('✅ signIn - Tokens reçus');
       return tokens;
     } catch (error) {
-      console.error('❌ signIn - Erreur:', error);
       throw new Error(error instanceof Error ? error.message : 'Email ou mot de passe incorrect');
     }
   }
@@ -64,18 +60,12 @@ export class AuthApiAdapter implements AuthPort {
 
   async getCurrentUser(accessToken: string): Promise<User> {
     try {
-      console.log('🔍 getCurrentUser - Token:', accessToken.substring(0, 20) + '...');
-      console.log('🔍 getCurrentUser - URL:', `${this.httpClient['baseUrl']}${API_CONFIG.ENDPOINTS.AUTH.ME}`);
-
       const user = await this.httpClient.get<User>(
         API_CONFIG.ENDPOINTS.AUTH.ME,
         accessToken
       );
-
-      console.log('✅ getCurrentUser - Succès:', user);
       return user;
-    } catch (error) {
-      console.error('❌ getCurrentUser - Erreur complète:', error);
+    } catch {
       throw new Error('Impossible de récupérer les informations utilisateur');
     }
   }

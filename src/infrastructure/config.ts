@@ -8,7 +8,10 @@ export const API_CONFIG = {
       REFRESH: '/auth/refresh',
       ME: '/users/me',
     },
+    PRODUCTS: {
+      GET_ALL: '/products',
+      GET_BY_ID: (id: string) => `/products/${id}`,
+    },
   },
 };
 
-console.log(API_CONFIG.BASE_URL)

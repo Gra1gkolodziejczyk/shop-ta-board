@@ -20,6 +20,10 @@ export const API_CONFIG = {
       CLEAR: '/cart',
       CHECKOUT: '/cart/checkout',
     },
+    ORDERS: {
+      GET_ALL: '/orders',
+      GET_BY_ID: (id: string) => `/orders/${id}`,
+    },
   },
 };
 

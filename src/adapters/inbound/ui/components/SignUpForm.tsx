@@ -55,7 +55,7 @@ export const SignUpForm: React.FC = () => {
               id="firstname"
               name="firstname"
               type="text"
-              placeholder="Jean"
+              placeholder="John"
               value={formData.firstname}
               onChange={handleChange}
               required
@@ -69,7 +69,7 @@ export const SignUpForm: React.FC = () => {
               id="lastname"
               name="lastname"
               type="text"
-              placeholder="Dupont"
+              placeholder="Doe"
               value={formData.lastname}
               onChange={handleChange}
               required
@@ -84,7 +84,7 @@ export const SignUpForm: React.FC = () => {
             id="email"
             name="email"
             type="email"
-            placeholder="jean.dupont@example.com"
+            placeholder="john.doe@example.com"
             value={formData.email}
             onChange={handleChange}
             required
@@ -102,11 +102,11 @@ export const SignUpForm: React.FC = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            minLength={8}
+            minLength={6}
             disabled={isLoading}
           />
           <p className="text-xs text-gray-500">
-            Minimum 8 caractères avec majuscule, minuscule et chiffre
+            Minimum 6 caractères avec majuscule, minuscule et chiffre
           </p>
         </div>
 

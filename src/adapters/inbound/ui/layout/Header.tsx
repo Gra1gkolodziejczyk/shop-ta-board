@@ -1,30 +1,28 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { useCart } from '@/infrastructure/providers/CartProvider.tsx'; // ← Ajouter
+import { useCart } from '@/infrastructure/providers/CartProvider.tsx';
 import { Avatar } from '../common/Avatar';
 import { LogOut, User, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Header: React.FC = () => {
   const { user, signOut } = useAuth();
-  const { cart } = useCart(); // ← Ajouter
+  const { cart } = useCart();
   const [showDropdown, setShowDropdown] = useState(false);
 
   if (!user) return null;
 
-  const cartItemsCount = cart?.totalItems || 0; // ← Nombre d'articles
+  const cartItemsCount = cart?.totalItems || 0;
 
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="text-2xl">🛹</div>
             <span className="text-xl font-bold text-gray-900">Shop Ta Board</span>
           </Link>
 
-          {/* Navigation */}
           <nav className="hidden md:flex space-x-8">
             <Link
               to="/"
@@ -33,7 +31,6 @@ export const Header: React.FC = () => {
               Produits
             </Link>
 
-            {/* ⬇️ Panier avec badge */}
             <Link
               to="/cart"
               className="relative text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors flex items-center group"
@@ -41,7 +38,6 @@ export const Header: React.FC = () => {
               <ShoppingCart className="w-4 h-4 mr-1 group-hover:scale-110 transition-transform" />
               <span>Panier</span>
 
-              {/* Badge avec le nombre d'articles */}
               {cartItemsCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-in zoom-in duration-200">
                   {cartItemsCount > 99 ? '99+' : cartItemsCount}
@@ -57,7 +53,6 @@ export const Header: React.FC = () => {
             </Link>
           </nav>
 
-          {/* User Menu */}
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
@@ -71,13 +66,11 @@ export const Header: React.FC = () => {
 
             {showDropdown && (
               <>
-                {/* Overlay pour fermer le dropdown */}
                 <div
                   className="fixed inset-0 z-10"
                   onClick={() => setShowDropdown(false)}
                 />
 
-                {/* Dropdown */}
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-20 border">
                   <div className="px-4 py-2 border-b">
                     <p className="text-sm font-medium text-gray-900">

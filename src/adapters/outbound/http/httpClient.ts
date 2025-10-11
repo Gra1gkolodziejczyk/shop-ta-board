@@ -27,14 +27,12 @@ export class HttpClient {
       const data = await response.json();
 
       if (!response.ok) {
-        // Si le backend renvoie un message d'erreur structuré
         const errorMessage = data.message || data.error || `Erreur HTTP ${response.status}`;
         throw new Error(errorMessage);
       }
 
       return data;
     } catch (error) {
-      // Gérer les erreurs réseau et autres
       if (error instanceof Error) {
         throw error;
       }
@@ -51,12 +49,12 @@ export class HttpClient {
 
   async post<T>(
     endpoint: string,
-    data?: unknown, // ← Rendre data optionnel pour les endpoints sans body
+    data?: unknown,
     token?: string
   ): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'POST',
-      body: data ? JSON.stringify(data) : undefined, // ← Condition pour éviter d'envoyer undefined
+      body: data ? JSON.stringify(data) : undefined,
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
   }

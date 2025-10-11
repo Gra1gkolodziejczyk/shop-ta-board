@@ -1,13 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { type Order, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS } from '@/domain/entities/Order';
 import { Package, Calendar, ChevronRight } from 'lucide-react';
 
 interface OrderCardProps {
   order: Order;
-  onClick: () => void;
 }
 
-export const OrderCard: React.FC<OrderCardProps> = ({ order, onClick }) => {
+export const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
+  const navigate = useNavigate();
+
   const orderDate = new Date(order.createdAt);
   const formattedDate = orderDate.toLocaleDateString('fr-FR', {
     day: 'numeric',
@@ -17,13 +19,16 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onClick }) => {
 
   const totalItems = order.items.reduce((sum, item) => sum + item.quantity, 0);
 
+  const handleClick = () => {
+    navigate(`/orders/${order.id}`);
+  };
+
   return (
     <div
-      onClick={onClick}
+      onClick={handleClick}
       className="bg-white rounded-lg border border-gray-200 p-6 hover:border-blue-300 hover:shadow-md transition-all cursor-pointer group"
     >
       <div className="flex items-start justify-between mb-4">
-        {/* Order Info */}
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
             <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
@@ -47,7 +52,6 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onClick }) => {
           </div>
         </div>
 
-        {/* Price and Arrow */}
         <div className="flex flex-col items-end">
           <span className="text-2xl font-bold text-gray-900 mb-2">
             {order.totalAmount.toFixed(2)} €
@@ -56,7 +60,6 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onClick }) => {
         </div>
       </div>
 
-      {/* Product Preview (first 3 items) */}
       <div className="flex -space-x-2">
         {order.items.slice(0, 3).map((item, index) => (
           <div

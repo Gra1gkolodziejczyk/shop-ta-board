@@ -73,7 +73,6 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
           {item.productPrice.toFixed(2)} €
         </p>
 
-        {/* Quantity Controls */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => handleQuantityChange(item.quantity - 1)}

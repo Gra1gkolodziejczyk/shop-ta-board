@@ -7,7 +7,6 @@ export class AuthUseCases implements AuthUseCasesPort {
   constructor(private authPort: AuthPort) {}
 
   async signUp(data: SignUpData): Promise<Tokens> {
-    // Validation métier
     if (data.password.length < 8) {
       throw new Error('Le mot de passe doit contenir au moins 8 caractères');
     }
@@ -28,7 +27,6 @@ export class AuthUseCases implements AuthUseCasesPort {
   }
 
   async signIn(data: SignInData): Promise<Tokens> {
-    // Validation métier
     if (!data.email || !data.password) {
       throw new Error('Email et mot de passe requis');
     }

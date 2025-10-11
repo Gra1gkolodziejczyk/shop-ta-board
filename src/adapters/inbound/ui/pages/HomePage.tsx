@@ -6,7 +6,7 @@ import { useProducts } from '@/infrastructure/providers/ProductProvider.tsx';
 import type { Product } from '@/domain/entities/Product.ts';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useCart } from "@/infrastructure/providers/CartProvider.tsx";
-import {toast} from "sonner";
+import { toast } from "sonner";
 
 export const HomePage: React.FC = () => {
   const {

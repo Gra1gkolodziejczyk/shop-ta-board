@@ -94,7 +94,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setError(null);
       setIsLoading(true);
       const result = await cartUseCases.checkout();
-      setCart(null); // Vider le panier après le checkout
+      setCart(null);
       return result;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de la commande');
@@ -106,7 +106,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const clearError = () => setError(null);
 
-  // Charger le panier au montage
   useEffect(() => {
     fetchCart();
   }, [fetchCart]);

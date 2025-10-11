@@ -19,7 +19,6 @@ export interface Product {
   stock: number;
 }
 
-// Helper pour les labels en français
 export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   [ProductCategory.WHEEL]: 'Roues',
   [ProductCategory.BOARD]: 'Planches',

@@ -13,7 +13,6 @@ export interface SignInData {
   password: string;
 }
 
-// Port de sortie (interface pour l'adapter API)
 export interface AuthPort {
   signUp(data: SignUpData): Promise<Tokens>;
   signIn(data: SignInData): Promise<Tokens>;

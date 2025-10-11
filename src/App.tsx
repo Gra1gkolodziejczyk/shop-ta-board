@@ -10,18 +10,15 @@ import { HomePage } from './adapters/inbound/ui/pages/HomePage';
 import { ProductDetailPage } from './adapters/inbound/ui/pages/ProductDetailPage';
 import { CartPage } from './adapters/inbound/ui/pages/CartPage';
 import { OrdersPage } from './adapters/inbound/ui/pages/OrdersPage';
+import { OrderDetailPage } from './adapters/inbound/ui/pages/OrderDetailPage';
+import { Loading } from "@/adapters/inbound/ui/common/Loading.tsx";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
-        </div>
-      </div>
+      <Loading />
     );
   }
 
@@ -34,7 +31,7 @@ function App() {
       <AuthProvider>
         <ProductProvider>
           <CartProvider>
-            <OrderProvider> {/* ← Ajouter */}
+            <OrderProvider>
               <Toaster
                 position="top-right"
                 richColors
@@ -75,6 +72,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <OrdersPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/orders/:id"
+                  element={
+                    <ProtectedRoute>
+                      <OrderDetailPage />
                     </ProtectedRoute>
                   }
                 />

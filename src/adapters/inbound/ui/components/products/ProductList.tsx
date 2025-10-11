@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Product } from '@/domain/entities/Product';
 import { ProductCard } from './ProductCard';
-import { Loader2 } from 'lucide-react';
+import {Loading} from "@/adapters/inbound/ui/common/Loading.tsx";
 
 interface ProductListProps {
   products: Product[];
@@ -9,17 +9,10 @@ interface ProductListProps {
   onAddToCart?: (product: Product) => void;
 }
 
-export const ProductList: React.FC<ProductListProps> = ({
-                                                          products,
-                                                          isLoading,
-                                                          onAddToCart,
-                                                        }) => {
+export const ProductList: React.FC<ProductListProps> = ({products, isLoading, onAddToCart}) => {
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-gray-600">Chargement des produits...</span>
-      </div>
+      <Loading />
     );
   }
 

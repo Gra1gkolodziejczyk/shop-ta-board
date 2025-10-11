@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner'; // ← Ajouter
+import { toast } from 'sonner';
 import { Header } from '../layout/Header';
 import { CartItem } from '../components/cart/CartItem';
 import { CartSummary } from '../components/cart/CartSummary';
 import { useCart } from '@/infrastructure/providers/CartProvider';
-import { ShoppingCart, ArrowLeft, Loader2, Package } from 'lucide-react';
+import { ShoppingCart, ArrowLeft, Package } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {Button} from "@/components/ui/button.tsx";
+import { Loading } from "@/adapters/inbound/ui/common/Loading.tsx";
 
 export const CartPage: React.FC = () => {
   const navigate = useNavigate();
@@ -42,15 +43,7 @@ export const CartPage: React.FC = () => {
 
   if (isLoading && !cart) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center h-96">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Chargement du panier...</span>
-          </div>
-        </div>
-      </div>
+      <Loading />
     );
   }
 
@@ -69,7 +62,6 @@ export const CartPage: React.FC = () => {
           Continuer mes achats
         </button>
 
-        {/* Title */}
         <div className="flex items-center mb-8">
           <ShoppingCart className="w-8 h-8 text-gray-900 mr-3" />
           <h1 className="text-3xl font-bold text-gray-900">Mon panier</h1>
@@ -80,7 +72,6 @@ export const CartPage: React.FC = () => {
           )}
         </div>
 
-        {/* Error Alert */}
         {error && (
           <Alert variant="destructive" className="mb-6">
             <AlertDescription className="flex justify-between items-center">
@@ -112,16 +103,13 @@ export const CartPage: React.FC = () => {
             </Button>
           </div>
         ) : (
-          /* Cart with items */
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {cart.items.map((item) => (
                 <CartItem key={item.id} item={item} />
               ))}
             </div>
 
-            {/* Cart Summary */}
             <div className="lg:col-span-1">
               <CartSummary
                 cart={cart}

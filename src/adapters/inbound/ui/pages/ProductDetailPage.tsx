@@ -17,6 +17,7 @@ import {
   Tag
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loading } from "@/adapters/inbound/ui/common/Loading.tsx";
 
 export const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +27,7 @@ export const ProductDetailPage: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [isAddingToCart, setIsAddingToCart] = useState(false); // ← Ajouter
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -68,7 +69,6 @@ export const ProductDetailPage: React.FC = () => {
       setIsAddingToCart(true);
       await addToCart({ productId: product.id, quantity });
 
-      // ⬇️ Toast de succès avec action
       toast.success(`${quantity}x ${product.name} ajouté${quantity > 1 ? 's' : ''} au panier`, {
         description: `Total: ${(product.price * quantity).toFixed(2)} €`,
         action: {
@@ -89,15 +89,7 @@ export const ProductDetailPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center h-96">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Chargement...</span>
-          </div>
-        </div>
-      </div>
+      <Loading />
     );
   }
 
@@ -145,7 +137,6 @@ export const ProductDetailPage: React.FC = () => {
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-8">
-            {/* Image Section */}
             <div className="space-y-4">
               <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
                 <img
@@ -160,7 +151,6 @@ export const ProductDetailPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col">
-              {/* Category Badge */}
               <div className="flex items-center gap-2 mb-4">
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                   <Tag className="w-3 h-3 mr-1" />

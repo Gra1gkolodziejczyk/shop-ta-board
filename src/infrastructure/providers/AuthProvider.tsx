@@ -18,7 +18,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Instancier les adapters et use cases
 const authApiAdapter = new AuthApiAdapter();
 const tokenStorage = new TokenStorageAdapter();
 const authUseCases = new AuthUseCases(authApiAdapter);
@@ -28,7 +27,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Charger l'utilisateur au démarrage
   useEffect(() => {
     const initAuth = async () => {
       const accessToken = tokenStorage.getAccessToken();
@@ -42,7 +40,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const currentUser = await authUseCases.getCurrentUser(accessToken);
         setUser(currentUser);
       } catch {
-        // Token invalide, essayer de refresh
         const refreshToken = tokenStorage.getRefreshToken();
         if (refreshToken) {
           try {

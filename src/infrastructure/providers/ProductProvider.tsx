@@ -16,7 +16,6 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-// Instancier UNIQUEMENT le tokenStorage
 const tokenStorage = new TokenStorageAdapter();
 
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -25,7 +24,6 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | null>(null);
 
-  // ⬇️ Créer les instances ICI avec une fonction qui récupère le token
   const productApiAdapter = new ProductApiAdapter(() => {
     const token = tokenStorage.getAccessToken();
     return token;

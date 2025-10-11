@@ -8,6 +8,10 @@ export const API_CONFIG = {
       REFRESH: '/auth/refresh',
       ME: '/users/me',
     },
+    USERS: {
+      UPDATE: '/users/me',
+      DELETE: '/users/me',
+    },
     PRODUCTS: {
       GET_ALL: '/products',
       GET_BY_ID: (id: string) => `/products/${id}`,
@@ -23,6 +27,15 @@ export const API_CONFIG = {
     ORDERS: {
       GET_ALL: '/orders',
       GET_BY_ID: (id: string) => `/orders/${id}`,
+    },
+    ADMIN: {
+      LOGIN: '/admin/login',
+      PRODUCTS: {
+        GET_ALL: '/products',
+        CREATE: '/products',
+        UPDATE: (id: string) => `/products/${id}`,
+        DELETE: (id: string) => `/products/${id}`,
+      },
     },
   },
 };

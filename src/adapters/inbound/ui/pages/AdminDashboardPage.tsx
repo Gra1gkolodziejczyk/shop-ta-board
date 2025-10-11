@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAdmin } from '@/infrastructure/providers/AdminProvider';
 import type { Product } from '@/domain/entities/Product';
@@ -7,14 +6,14 @@ import { ProductTable } from '../components/admin/ProductTable';
 import { ProductFormDialog } from '../components/admin/ProductFormDialog';
 import { StockUpdateDialog } from '../components/admin/StockUpdateDialog';
 import { DeleteProductDialog } from '../components/admin/DeleteProductDialog';
-import { Shield, Plus, LogOut, Package } from 'lucide-react';
+import { Plus, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loading } from "@/adapters/inbound/ui/common/Loading.tsx";
 import type { CreateProductData, UpdateProductData } from "@/domain/ports/outbound/AdminPort.ts";
+import AdminHeader from "@/adapters/inbound/ui/layout/AdminHeader.tsx";
 
 export const AdminDashboardPage: React.FC = () => {
-  const navigate = useNavigate();
   const {
     products,
     isLoading,
@@ -120,39 +119,9 @@ export const AdminDashboardPage: React.FC = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-
-    toast.info('Déconnexion admin', {
-      description: 'Vous avez été déconnecté',
-    });
-
-    navigate('/admin');
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Shield className="w-6 h-6 text-blue-600 mr-3" />
-              <h1 className="text-xl font-bold text-gray-900">Administration</h1>
-            </div>
-
-            <Button
-              variant="ghost"
-              onClick={handleLogout}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Déconnexion
-            </Button>
-          </div>
-        </div>
-      </header>
-
+      <AdminHeader />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center">

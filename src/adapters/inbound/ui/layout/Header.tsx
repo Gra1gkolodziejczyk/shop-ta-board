@@ -18,7 +18,7 @@ export const Header: React.FC = () => {
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="cursor-pointer flex items-center space-x-2">
             <div className="text-2xl">🛹</div>
             <span className="text-xl font-bold text-gray-900">Shop Ta Board</span>
           </Link>
@@ -26,14 +26,14 @@ export const Header: React.FC = () => {
           <nav className="hidden md:flex space-x-8">
             <Link
               to="/"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
+              className="cursor-pointer text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
             >
               Produits
             </Link>
 
             <Link
               to="/cart"
-              className="relative text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors flex items-center group"
+              className="cursor-pointer relative text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors flex items-center group"
             >
               <ShoppingCart className="w-4 h-4 mr-1 group-hover:scale-110 transition-transform" />
               <span>Panier</span>
@@ -47,7 +47,7 @@ export const Header: React.FC = () => {
 
             <Link
               to="/orders"
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
+              className="cursor-pointer text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors"
             >
               Mes commandes
             </Link>
@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center space-x-3 focus:outline-none"
+              className="cursor-pointer flex items-center space-x-3 focus:outline-none"
             >
               <span className="text-sm font-medium text-gray-700 hidden md:block">
                 {user.firstname} {user.lastname}
@@ -81,7 +81,7 @@ export const Header: React.FC = () => {
 
                   <Link
                     to="/profile"
-                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                    className="cursor-pointer flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                     onClick={() => setShowDropdown(false)}
                   >
                     <User className="w-4 h-4 mr-2" />
@@ -93,7 +93,7 @@ export const Header: React.FC = () => {
                       setShowDropdown(false);
                       signOut();
                     }}
-                    className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    className="cursor-pointer w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
                   >
                     <LogOut className="w-4 h-4 mr-2" />
                     Se déconnecter

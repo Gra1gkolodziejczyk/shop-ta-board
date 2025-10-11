@@ -21,7 +21,7 @@ export const AdminLoginPage: React.FC = () => {
           <div className="mt-6 text-center">
             <button
               onClick={() => navigate('/')}
-              className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              className="cursor-pointer text-sm text-gray-600 hover:text-gray-900 transition-colors"
             >
               ← Retour au site
             </button>

@@ -15,7 +15,7 @@ const ProductNotFound = () => {
         </Alert>
         <button
           onClick={() => navigate('/')}
-          className="mt-4 text-blue-600 hover:text-blue-700 flex items-center"
+          className="cursor-pointer mt-4 text-blue-600 hover:text-blue-700 flex items-center"
         >
           <ArrowLeft className="w-4 h-4 mr-1" />
           Retour aux produits

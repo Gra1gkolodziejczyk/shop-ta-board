@@ -136,7 +136,7 @@ export const ProfilePage: React.FC = () => {
       <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
           onClick={() => navigate('/')}
-          className="text-gray-600 hover:text-gray-900 flex items-center mb-6 transition-colors"
+          className="cursor-pointer text-gray-600 hover:text-gray-900 flex items-center mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Retour à l'accueil
@@ -222,7 +222,7 @@ export const ProfilePage: React.FC = () => {
                 <Button
                   type="submit"
                   disabled={isUpdating}
-                  className="w-full md:w-auto"
+                  className="cursor-pointer w-full md:w-auto"
                 >
                   {isUpdating ? (
                     <>
@@ -232,7 +232,7 @@ export const ProfilePage: React.FC = () => {
                   ) : (
                     <>
                       <Save className="w-4 h-4 mr-2" />
-                      Modifier les informations
+                      Modifier mes informations
                     </>
                   )}
                 </Button>
@@ -253,6 +253,7 @@ export const ProfilePage: React.FC = () => {
               variant="destructive"
               onClick={() => setShowDeleteDialog(true)}
               disabled={isDeleting}
+              className="cursor-pointer"
             >
               <Trash2 className="w-4 h-4 mr-2" />
               Supprimer mon compte
@@ -292,7 +293,7 @@ export const ProfilePage: React.FC = () => {
                 variant="outline"
                 onClick={() => setShowDeleteDialog(false)}
                 disabled={isDeleting}
-                className="w-full sm:w-auto"
+                className="cursor-pointer w-full sm:w-auto"
               >
                 Annuler
               </Button>
@@ -301,7 +302,7 @@ export const ProfilePage: React.FC = () => {
                 variant="destructive"
                 onClick={handleDeleteAccount}
                 disabled={isDeleting}
-                className="w-full sm:w-auto"
+                className="cursor-pointer w-full sm:w-auto"
               >
                 {isDeleting ? (
                   <>

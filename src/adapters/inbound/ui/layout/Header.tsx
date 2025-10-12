@@ -14,13 +14,13 @@ export const Header: React.FC = () => {
 
   if (!user) return null;
 
-  const cartItemsCount = cart?.totalItems || 0;
+  const cartItemsCount = cart?.totalItems ?? 0;
 
   const isActive = (path: string) => location.pathname === path;
 
   const navLinks = [
     { path: '/', label: 'Produits', icon: null },
-    { path: '/cart', label: 'Panier', icon: ShoppingCart, badge: cartItemsCount },
+    { path: '/cart', label: 'Panier', icon: ShoppingCart, badge: cartItemsCount > 0 ? cartItemsCount : undefined },
     { path: '/orders', label: 'Mes commandes', icon: Package },
   ];
 
@@ -62,8 +62,8 @@ export const Header: React.FC = () => {
                   {Icon && <Icon className="w-4 h-4 mr-1 group-hover:scale-110 transition-transform" />}
                   <span>{link.label}</span>
 
-                  {/* Badge */}
-                  {link.badge && link.badge > 0 && (
+                  {/* Badge - N'affiche que si > 0 */}
+                  {link.badge !== undefined && link.badge > 0 && (
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md animate-in zoom-in duration-200">
                       {link.badge > 99 ? '99+' : link.badge}
                     </span>
@@ -176,7 +176,8 @@ export const Header: React.FC = () => {
                   {Icon && <Icon className="w-5 h-5 mr-3" />}
                   <span className="font-medium">{link.label}</span>
 
-                  {link.badge && link.badge > 0 && (
+                  {/* Badge mobile - N'affiche que si > 0 */}
+                  {link.badge !== undefined && link.badge > 0 && (
                     <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
                       {link.badge > 99 ? '99+' : link.badge}
                     </span>

@@ -118,9 +118,9 @@ export const OrderDetailPage: React.FC = () => {
             </div>
 
             <div className="flex flex-col items-start md:items-end gap-3">
-              <span className="px-4 py-2 rounded-full text-sm font-medium bg-white bg-opacity-20 backdrop-blur-sm">
-                {ORDER_STATUS_LABELS[order.status]}
-              </span>
+             <span className={`px-3 py-1 rounded-full text-xs font-medium ${ORDER_STATUS_COLORS[order.status]}`}>
+               {ORDER_STATUS_LABELS[order.status]}
+             </span>
               <span className="text-3xl md:text-4xl font-bold">
                 {order.totalAmount.toFixed(2)} €
               </span>

@@ -18,15 +18,11 @@ export const CartPage: React.FC = () => {
   const handleCheckout = async () => {
     try {
       setIsCheckingOut(true);
-      const result = await checkout();
+      await checkout();
 
-      toast.success('Commande confirmée ! 🎉', {
-        description: `Votre commande #${result.orderId.substring(0, 8)} a été enregistrée`,
+      toast.success('Commande confirmée !', {
+        description: `Votre commande à été enregistrée`,
         duration: 5000,
-        action: {
-          label: 'Voir mes commandes',
-          onClick: () => navigate('/orders'),
-        },
       });
 
       setTimeout(() => {

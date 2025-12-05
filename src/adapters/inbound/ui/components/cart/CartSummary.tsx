@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Cart } from '@/domain/entities/Cart';
-import { ShoppingBag } from 'lucide-react';
+import {Loader2, ShoppingBag} from 'lucide-react';
 
 interface CartSummaryProps {
   cart: Cart;
@@ -41,7 +41,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ cart, onCheckout, isCh
       >
         {isCheckingOut ? (
           <>
-            <span className="animate-spin mr-2">⏳</span>
+            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
             Traitement en cours...
           </>
         ) : (
